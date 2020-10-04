@@ -1,0 +1,39 @@
+/*
+a = %rdi at -8(%rbp)
+b = %rsi at -16(%rbp)
+c = %rdx at -24(%rbp)
+d = %rcx at -32(%rbp)
+e = %r8 at -40(%rbp)
+f = %r9 at -48(%rbp)
+
+return = %rax
+
+
+idea: stack-based RPN lanugage with only integers
+
+push all parameters to stack beforehand, so I can use those six registers for calculation
+
+use %rsp and %rbp to keep it simple
+
+at end of function, top value is returned in %rax
+
+
+commands:
+
+a-f: push that parameter
+
+integer literal: push that long
+
+++ add top two longs (should be + but scanf("%ld") eats the first +)
+
+-- subtract top from second (should be - but scanf("%ld") eats the first -)
+
+* multiply top two longs
+
+/ divide second from top
+
+% mod second by top
+
+*/
+
+
