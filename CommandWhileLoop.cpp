@@ -2,31 +2,13 @@
 #include <cstring>
 #include <stdexcept>
 
-asm(R"(
-.Lwhile_loop_header_code_start:
-	mov	(%rsp),%rax
-	test	%rax,%rax
-	je	.+1024 # force rel32
-.Lwhile_loop_header_branch_offset_end:
-.Lwhile_loop_header_code_end:
-)");
+extern char while_loop_header_code_start[];
+extern char while_loop_header_branch_offset_end[];
+extern char while_loop_header_code_end[];
 
-extern char while_loop_header_code_start[] asm(".Lwhile_loop_header_code_start");
-extern char while_loop_header_branch_offset_end[] asm(".Lwhile_loop_header_branch_offset_end");
-extern char while_loop_header_code_end[] asm(".Lwhile_loop_header_code_end");
-
-asm(R"(
-.Lwhile_loop_footer_code_start:
-	mov	(%rsp),%rax
-	test	%rax,%rax
-	jne	.+1024 # force rel32
-.Lwhile_loop_footer_branch_offset_end:
-.Lwhile_loop_footer_code_end:
-)");
-
-extern char while_loop_footer_code_start[] asm(".Lwhile_loop_footer_code_start");
-extern char while_loop_footer_branch_offset_end[] asm(".Lwhile_loop_footer_branch_offset_end");
-extern char while_loop_footer_code_end[] asm(".Lwhile_loop_footer_code_end");
+extern char while_loop_footer_code_start[];
+extern char while_loop_footer_branch_offset_end[];
+extern char while_loop_footer_code_end[];
 
 Command Command::while_loop(std::vector<Command> const &commands) {
 	std::string body_code;

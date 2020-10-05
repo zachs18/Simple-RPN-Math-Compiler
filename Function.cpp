@@ -4,38 +4,11 @@
 
 #include "Function.hpp"
 
-asm(R"(
-.Lfunction_header_code_start:
-	endbr64
-	push	%rbp
-	mov	%rsp,%rbp
+extern char function_header_code_start[];
+extern char function_header_code_end[];
 
-	push	%rdi # at -8(%rbp)
-	push	%rsi # at -16(%rbp)
-	push	%rdx # at -24(%rbp)
-	push	%rcx # at -32(%rbp)
-	push	%r8 # at -40(%rbp)
-	push	%r9 # at -48(%rbp)
-
-.Lfunction_header_code_end:
-)");
-
-extern char function_header_code_start[] asm(".Lfunction_header_code_start");
-extern char function_header_code_end[] asm(".Lfunction_header_code_end");
-
-asm(R"(
-.Lfunction_footer_code_start:
-	pop	%rax
-
-	mov	%rbp,%rsp
-	pop	%rbp
-	ret
-
-.Lfunction_footer_code_end:
-)");
-
-extern char function_footer_code_start[] asm(".Lfunction_footer_code_start");
-extern char function_footer_code_end[] asm(".Lfunction_footer_code_end");
+extern char function_footer_code_start[];
+extern char function_footer_code_end[];
 
 Function::Function(std::vector<Command> &&commands_)
 : m_commands(std::move(commands_))
