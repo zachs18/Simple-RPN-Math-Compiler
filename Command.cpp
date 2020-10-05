@@ -176,8 +176,8 @@ Command Command::multiply{
 asm(R"(
 .Ldivide_code_start:
 	pop	%rcx
-	xor	%rdx,%rdx
 	mov	(%rsp),%rax
+	cqo
 	idiv	%rcx
 	mov	%rax,(%rsp)
 .Ldivide_code_end:
@@ -198,8 +198,8 @@ Command Command::divide{
 asm(R"(
 .Lmod_code_start:
 	pop	%rcx
-	xor	%rdx,%rdx
 	mov	(%rsp),%rax
+	cqo
 	idiv	%rcx
 	mov	%rdx,(%rsp)
 .Lmod_code_end:
