@@ -281,3 +281,49 @@ Command Command::push_value(long value) {
 		std::move(code)
 	};
 }
+
+
+asm(R"(
+.Lpush_stack_index_code_start:
+	mov	$0,%rax
+.Lpush_stack_index_value_end:
+	mov	(%rsp,%rax,8),%rcx
+	push	%rcx
+.Lpush_stack_index_code_end:
+)");
+
+extern char push_stack_index_code_start[] asm(".Lpush_stack_index_code_start");
+extern char push_stack_index_value_end[] asm(".Lpush_stack_index_value_end");
+extern char push_stack_index_code_end[] asm(".Lpush_stack_index_code_end");
+
+Command Command::push_stack_index(unsigned index) {
+	std::string code{push_stack_index_code_start, push_stack_index_code_end};
+	std::memcpy(&*(code.end()-(push_stack_index_code_end-push_stack_index_value_end)-4), &index, 4);
+	return Command{
+		0, 1, index+1,
+		std::move(code)
+	};
+}
+
+
+asm(R"(
+.Lpop_stack_index_code_start:
+	pop	%rcx
+	mov	$0,%rax
+.Lpop_stack_index_value_end:
+	mov	%rcx,(%rsp,%rax,8)
+.Lpop_stack_index_code_end:
+)");
+
+extern char pop_stack_index_code_start[] asm(".Lpop_stack_index_code_start");
+extern char pop_stack_index_value_end[] asm(".Lpop_stack_index_value_end");
+extern char pop_stack_index_code_end[] asm(".Lpop_stack_index_code_end");
+
+Command Command::pop_stack_index(unsigned index) {
+	std::string code{pop_stack_index_code_start, pop_stack_index_code_end};
+	std::memcpy(&*(code.end()-(pop_stack_index_code_end-pop_stack_index_value_end)-4), &index, 4);
+	return Command{
+		1, 0, index+2,
+		std::move(code)
+	};
+}

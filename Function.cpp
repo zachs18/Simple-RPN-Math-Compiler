@@ -45,6 +45,7 @@ Function::Function(std::vector<Command> &&commands_)
 	for (const auto &command : m_commands) {
 		//printf("stack_size: %u, param_count: %u, return_count: %u\n", stack_size, command.param_count(), command.return_count());
 		if (stack_size < command.param_count()) throw std::invalid_argument("Function would pop value from empty stack");
+		if (stack_size < command.required_stack_depth()) throw std::invalid_argument("Function would use value past end of stack");
 		stack_size -= command.param_count();
 		stack_size += command.return_count();
 
