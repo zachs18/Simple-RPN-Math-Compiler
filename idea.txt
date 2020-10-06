@@ -24,15 +24,21 @@ a-f: push that parameter
 
 integer literal: push that long
 
-++ add top two longs (should be + but scanf("%ld") eats the first +)
++ add top two longs
 
--- subtract top from second (should be - but scanf("%ld") eats the first -)
+- subtract top from second
 
 * multiply top two longs
 
-/ divide second from top
+/ divide second by top
 
 % mod second by top
+
+
+
+
+
+
 
 */
 

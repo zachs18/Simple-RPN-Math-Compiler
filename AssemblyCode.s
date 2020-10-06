@@ -8,12 +8,14 @@ function_header_code_start:
 	push	%rbp
 	mov	%rsp,%rbp
 
-	push	%rdi # at -8(%rbp)
-	push	%rsi # at -16(%rbp)
-	push	%rdx # at -24(%rbp)
-	push	%rcx # at -32(%rbp)
-	push	%r8 # at -40(%rbp)
-	push	%r9 # at -48(%rbp)
+	push	%rdi # a at -8(%rbp)
+	push	%rsi # b at -16(%rbp)
+	push	%rdx # c at -24(%rbp)
+	push	%rcx # d at -32(%rbp)
+	push	%r8  # e at -40(%rbp)
+	push	%r9  # f at -48(%rbp)
+	// stack starts at -56(%rbp)
+
 function_header_code_end:
 
 
@@ -72,6 +74,30 @@ push_f_code_start:
 	mov	-48(%rbp),%rax
 	push	%rax
 push_f_code_end:
+
+
+	.global and_code_start
+	.global and_code_end
+and_code_start:
+	pop	%rax
+	and	%rax,(%rsp)
+and_code_end:
+
+
+	.global xor_code_start
+	.global xor_code_end
+xor_code_start:
+	pop	%rax
+	xor	%rax,(%rsp)
+xor_code_end:
+
+
+	.global or_code_start
+	.global or_code_end
+or_code_start:
+	pop	%rax
+	or	%rax,(%rsp)
+or_code_end:
 
 
 	.global add_code_start
@@ -153,26 +179,48 @@ push_value_value_end:
 push_value_code_end:
 
 
-	.global push_stack_index_code_start
-	.global push_stack_index_value_end
-	.global push_stack_index_code_end
-push_stack_index_code_start:
+	.global push_from_stack_index_top_code_start
+	.global push_from_stack_index_top_value_end
+	.global push_from_stack_index_top_code_end
+push_from_stack_index_top_code_start:
 	mov	$0,%rax
-push_stack_index_value_end:
+push_from_stack_index_top_value_end:
 	mov	(%rsp,%rax,8),%rcx
 	push	%rcx
-push_stack_index_code_end:
+push_from_stack_index_top_code_end:
 
 
-	.global pop_stack_index_code_start
-	.global pop_stack_index_value_end
-	.global pop_stack_index_code_end
-pop_stack_index_code_start:
+	.global pop_to_stack_index_top_code_start
+	.global pop_to_stack_index_top_value_end
+	.global pop_to_stack_index_top_code_end
+pop_to_stack_index_top_code_start:
 	pop	%rcx
 	mov	$0,%rax
-pop_stack_index_value_end:
+pop_to_stack_index_top_value_end:
 	mov	%rcx,(%rsp,%rax,8)
-pop_stack_index_code_end:
+pop_to_stack_index_top_code_end:
+
+
+	.global push_from_stack_index_bottom_code_start
+	.global push_from_stack_index_bottom_value_end
+	.global push_from_stack_index_bottom_code_end
+push_from_stack_index_bottom_code_start:
+	mov	$0,%rax
+push_from_stack_index_bottom_value_end:
+	mov	-56(%rbp,%rax,8),%rcx
+	push	%rcx
+push_from_stack_index_bottom_code_end:
+
+
+	.global pop_to_stack_index_bottom_code_start
+	.global pop_to_stack_index_bottom_value_end
+	.global pop_to_stack_index_bottom_code_end
+pop_to_stack_index_bottom_code_start:
+	pop	%rcx
+	mov	$0,%rax
+pop_to_stack_index_bottom_value_end:
+	mov	%rcx,-56(%rbp,%rax,8)
+pop_to_stack_index_bottom_code_end:
 
 
 	.global while_loop_header_code_start

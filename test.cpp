@@ -76,6 +76,19 @@ std::tuple<int, std::vector<Command>> parse_helper(std::string_view &code) {
 				code.remove_prefix(1);
 				break;
 				
+			case '&':
+				cmds.push_back(Command::and_);
+				code.remove_prefix(1);
+				break;
+			case '|':
+				cmds.push_back(Command::or_);
+				code.remove_prefix(1);
+				break;
+			case '^':
+				cmds.push_back(Command::xor_);
+				code.remove_prefix(1);
+				break;
+				
 			case '0':
 			case '1':
 			case '2':
@@ -98,26 +111,25 @@ std::tuple<int, std::vector<Command>> parse_helper(std::string_view &code) {
 				break;
 			
 			case 'p':
-				{
-					code.remove_prefix(1);
-					unsigned index = 0;
-					while (code.size() > 0 && code[0] >= '0' && code[0] <= '9') {
-						index = index * 10 + (code[0] - '0');
-						code.remove_prefix(1);
-					}
-					cmds.push_back(Command::push_stack_index(index));
-				}
-				break;
-			
+			case 'P':
 			case 's':
+			case 'S':
 				{
+					char cmd = code[0];
 					code.remove_prefix(1);
 					unsigned index = 0;
 					while (code.size() > 0 && code[0] >= '0' && code[0] <= '9') {
 						index = index * 10 + (code[0] - '0');
 						code.remove_prefix(1);
 					}
-					cmds.push_back(Command::pop_stack_index(index));
+					if (cmd == 'p')
+						cmds.push_back(Command::push_from_stack_index_top(index));
+					else if (cmd == 'P')
+						cmds.push_back(Command::push_from_stack_index_bottom(index));
+					else if (cmd == 's')
+						cmds.push_back(Command::pop_to_stack_index_top(index));
+					else // if (cmd == 'S')
+						cmds.push_back(Command::pop_to_stack_index_bottom(index));
 				}
 				break;
 			case '{':
@@ -253,8 +265,12 @@ int main(int argc, char **argv) {
 	}
 	
 	std::string_view line_view = line;
-	
+
+	std::cout << "Code: \"" << line_view << "\"\n";
+
 	auto [paramcount, cmds] = parse_helper(line_view);
+
+	std::cout << "Remaining: \"" << line_view << "\"\n";
 
 	Function function{std::move(cmds)};
 
